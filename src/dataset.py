@@ -1,8 +1,9 @@
 from torchvision import transforms
-from npy2image import increase_dimension
+import npy2image
 import torch
+from torch.utils.data import Dataset
 
-class G2Net:
+class G2Dataset(Dataset):
     def __init__(self,path,target=None):
         self.path = path
         if target is not None:
@@ -15,7 +16,7 @@ class G2Net:
         return len(self.path)
 
     def __getitem__(self,idx):
-        image = increase_dimension(self.path[idx], self.is_train)
+        image = npy2image.increase_dimension(self.path[idx])
         trans = transforms.ToTensor()
         image = trans(image)
         if self.is_train is not None:

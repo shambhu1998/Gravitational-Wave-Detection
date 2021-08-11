@@ -1,12 +1,9 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt 
-import seaborn as sns 
 import torch
 from nnAudio.Spectrogram import CQT1992v2
 from PIL import Image 
 from sklearn.preprocessing import MinMaxScaler
-from . import config
+import config
 
 
 def idx2path(idx, is_train=True):
@@ -18,7 +15,7 @@ def idx2path(idx, is_train=True):
         path += 'test/' + idx[0] +'/'+ idx[1] +'/'+ idx[2] +'/'+ idx +'.npy'
     return path 
 
-def increase_dimension(path,is_train,transform=CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=64)): # in order to use efficientnet we need 3 dimension images
+def increase_dimension(path,transform=CQT1992v2(sr=2048, fmin=20, fmax=1024, hop_length=64)): # in order to use efficientnet we need 3 dimension images
     data = np.load(path)
     d1 = torch.from_numpy(data[0]).float()
     d2 = torch.from_numpy(data[1]).float()
@@ -33,4 +30,3 @@ def increase_dimension(path,is_train,transform=CQT1992v2(sr=2048, fmin=20, fmax=
     img[:,:,2] = 255*scaler.fit_transform(d3.reshape(d3.shape[1],d3.shape[2]))
     return Image.fromarray(img).rotate(90, expand=1).resize((256,256))
     
-
